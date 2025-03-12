@@ -3,21 +3,34 @@ function loadButton() {
         .then(res => res.json())
         .then(data => {
             // console.log("API Response:", data); 
-            displayCategory(data.categories
-            );
+            displayCategory(data.categories);
         })
         .catch(error => console.error("fetch problem:", error));
 }
 
+const categoriesVideos = (id) => {
+    let url = `https://openapi.programming-hero.com/api/phero-tube/category/${id}`
+    fetch(url)
+        .then(res => res.json())
+        .then(data => {
+            const clickButton = document.getElementById(`btn-${id}`);
+            clickButton.classList.add('active')
+            console.log(clickButton);
+            videoContainer(data.category)
+        })
+}
+
+
+
 function displayCategory(buttons) {
-    console.log("Loaded Categories:", buttons);
+
     const myButton = document.getElementById('container-category');
 
 
     for (const button of buttons) {
         const div = document.createElement('div');
         div.innerHTML = `
-            <button class="btn hover:bg-red-600 hover:text-white">${button.category
+            <button id="btn-${button.category_id}" onclick="categoriesVideos(${button.category_id})" class="btn hover:bg-red-600 hover:text-white">${button.category
             }</button>
         `;
         myButton.appendChild(div);
@@ -30,13 +43,23 @@ const videoLoad = () => {
     fetch('https://openapi.programming-hero.com/api/phero-tube/videos')
         .then(res => res.json())
         .then(data => {
-            console.log(data.videos);
+
             videoContainer(data.videos);
         })
 }
 
 const videoContainer = (videos) => {
     const container = document.getElementById('video-container');
+    container.innerHTML = '';//before data remove
+    if (videos.length === 0) {
+        container.innerHTML = `
+        <div class="col-span-full flex flex-col justify-center items-center py-10">
+                <img src="./assets/Icon.png" alt="">
+                <h2 class="text-3xl font-bold">Oops!! Sorry, There is no content here</h2>
+              </div> 
+        `
+        return;
+    }
     videos.forEach(video => {
         const videoCart = document.createElement('div');
         videoCart.innerHTML = `
