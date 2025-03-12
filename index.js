@@ -40,7 +40,7 @@ const videoContainer = (videos) => {
     videos.forEach(video => {
         const videoCart = document.createElement('div');
         videoCart.innerHTML = `
-            <div class="card bg-base-100">
+            <div class="card bg-base-100 shadow-md">
                     <figure class="relative ">
                         <img class="w-full h-[150px] object-cover" src=${video.thumbnail} alt="" />
                         <span class="absolute bottom-2 right-2 bg-black px-2 py-1 text-sm text-white rounded-sm">3hrs 56 min ago</span>
@@ -55,8 +55,8 @@ const videoContainer = (videos) => {
                        </div>
                        <div>
                         <h2 class="text-xl font-bold ">${video.title}</h2>
-                        <p class="text-gray-500 flex gap-4  mt-3">${video.authors[0].profile_name} <img class="text-green-600" src="./assets/ok.png" alt=""> </p>
-                        <p class="text-gray-500">91K views </p>
+                        <p class="text-gray-500 flex gap-4  mt-3">${video.authors[0].profile_name} <img class="w-8" src="./assets/ok1.png" alt=""> </p>
+                        <p class="text-gray-500">${video.others.views} views </p>
                        </div>
                     </div>
                 </div>
@@ -66,5 +66,5 @@ const videoContainer = (videos) => {
     })
 }
 
-videoLoad();
+
 
