@@ -1,6 +1,6 @@
-function removeActive(){
+function removeActive() {
     const btns = document.getElementsByClassName('active');
-    for(let btn of btns){
+    for (let btn of btns) {
         btn.classList.remove('active');
     }
 }
@@ -57,6 +57,36 @@ const videoLoad = () => {
         })
 }
 
+const loadVideoDetails = (videoId) => {
+    console.log(videoId);
+    const url = `https://openapi.programming-hero.com/api/phero-tube/video/${videoId}`;
+    fetch(url)
+        .then(res => res.json())
+        .then(data => videoDisplayDetails(data.video))
+}
+
+const videoDisplayDetails = (video) => {
+    console.log(video);
+    document.getElementById('video_details').showModal();
+    const detailsContainer = document.getElementById('details-container');
+
+    detailsContainer.innerHTML = `
+    <div class="card bg-base-100  shadow-sm">
+  <figure>
+    <img
+      src=${video.thumbnail}
+      alt="" />
+  </figure>
+  <div class="">
+    <h2 class="cart text-xl font-bold mt-2">${video.title}</h2>
+    <p class="text-lg font-semibold">${video.authors[0].profile_name}</p>
+    <p>${video.description}</p>
+  </div>
+</div>
+
+    `
+}
+
 const videoContainer = (videos) => {
     const container = document.getElementById('video-container');
     container.innerHTML = '';//before data remove
@@ -77,7 +107,7 @@ const videoContainer = (videos) => {
                         <img class="w-full h-[150px] object-cover" src=${video.thumbnail} alt="" />
                         <span class="absolute bottom-2 right-2 bg-black px-2 py-1 text-sm text-white rounded-sm">3hrs 56 min ago</span>
                     </figure>
-                    <div class=" flex gap-4 px-1 mt-4">
+                    <div class=" flex gap-4 px-1 mt-4 pl-2">
                        <div>
                         <div class="avatar">
                             <div class="ring-primary ring-offset-base-100 w-8 rounded-full ring ring-offset-2">
@@ -88,9 +118,10 @@ const videoContainer = (videos) => {
                        <div>
                         <h2 class="text-xl font-bold ">${video.title}</h2>
                         <p class="text-gray-500 flex gap-4  mt-3">${video.authors[0].profile_name} <img class="w-8" src="./assets/ok1.png" alt=""> </p>
-                        <p class="text-gray-500">${video.others.views} views </p>
+                        <p class="text-gray-500 pb-2">${video.others.views} views </p>
                        </div>
                     </div>
+                    <button onclick=loadVideoDetails('${video.video_id}') class="btn btn-block">Show details</button>
                 </div>
 
         `;
