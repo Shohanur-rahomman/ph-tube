@@ -96,8 +96,8 @@ const videoDisplayDetails = (video) => {
     <p>${video.description}</p>
   </div>
 </div>
-
-    `
+    `;
+    hiddenLoader()
 }
 
 const videoContainer = (videos) => {
