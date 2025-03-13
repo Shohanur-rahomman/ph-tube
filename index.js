@@ -1,9 +1,20 @@
+const showLoader = () => {
+    document.getElementById('dataLoader').classList.remove('hidden');
+    document.getElementById('video-container').classList.add('hidden');
+}
+const hiddenLoader = () => {
+    document.getElementById('dataLoader').classList.add('hidden');
+    document.getElementById('video-container').classList.remove('hidden');
+}
+
 function removeActive() {
     const btns = document.getElementsByClassName('active');
     for (let btn of btns) {
         btn.classList.remove('active');
     }
 }
+
+
 
 function loadButton() {
     fetch('https://openapi.programming-hero.com/api/phero-tube/categories')
@@ -16,6 +27,7 @@ function loadButton() {
 }
 
 const categoriesVideos = (id) => {
+    showLoader()
     let url = `https://openapi.programming-hero.com/api/phero-tube/category/${id}`
     fetch(url)
         .then(res => res.json())
@@ -23,7 +35,7 @@ const categoriesVideos = (id) => {
             removeActive();
             const clickButton = document.getElementById(`btn-${id}`);
             clickButton.classList.add('active')
-            console.log(clickButton);
+
             videoContainer(data.category)
         })
 }
@@ -47,8 +59,9 @@ function displayCategory(buttons) {
 
 loadButton();
 
-const videoLoad = () => {
-    fetch('https://openapi.programming-hero.com/api/phero-tube/videos')
+const videoLoad = (searchText = '') => {
+    showLoader()
+    fetch(`https://openapi.programming-hero.com/api/phero-tube/videos?title=${searchText}`)
         .then(res => res.json())
         .then(data => {
             removeActive()
@@ -66,7 +79,7 @@ const loadVideoDetails = (videoId) => {
 }
 
 const videoDisplayDetails = (video) => {
-    console.log(video);
+    showLoader();
     document.getElementById('video_details').showModal();
     const detailsContainer = document.getElementById('details-container');
 
@@ -97,6 +110,7 @@ const videoContainer = (videos) => {
                 <h2 class="text-3xl font-bold">Oops!! Sorry, There is no content here</h2>
               </div> 
         `
+        hiddenLoader();
         return;
     }
     videos.forEach(video => {
@@ -117,7 +131,10 @@ const videoContainer = (videos) => {
                        </div>
                        <div>
                         <h2 class="text-xl font-bold ">${video.title}</h2>
-                        <p class="text-gray-500 flex gap-4  mt-3">${video.authors[0].profile_name} <img class="w-8" src="./assets/ok1.png" alt=""> </p>
+                        <p class="text-gray-500 flex gap-4  mt-3">
+                        ${video.authors[0].profile_name} 
+                        ${video.authors[0].verified === true ? `<img class="w-8" src="./assets/ok1.png" alt="">` : 'not ok'}
+                         </p>
                         <p class="text-gray-500 pb-2">${video.others.views} views </p>
                        </div>
                     </div>
@@ -127,7 +144,13 @@ const videoContainer = (videos) => {
         `;
         container.appendChild(videoCart)
     })
+    hiddenLoader();
 }
+
+document.getElementById('inputId').addEventListener('keyup', (e) => {
+    const valueInput = e.target.value;
+    videoLoad(valueInput);
+})
 
 
 
